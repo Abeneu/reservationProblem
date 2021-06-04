@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ReservationController!{% endblock %}
+
+{% block body %}
+
+    <div>
+        <label for="paxList"> Entrer les ages séparé par ';'</label>
+        <input id="paxList" type="text" placeholder="11;5;6;8"/>
+        <label for="dateRes"> Entrer les ages séparé par ';'</label>
+        <input id="dateRes" type="date" />
+        <button id="reserver" value="{{ hotel.id }}"> Reserver </button>
+    </div>
+
+    <div id="tableId" class="tableId"></div>
+
+    <div>
+        <h1>Historique des reservations</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>N°</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>action</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for r in hotel.reservations %}
+            <tr>
+                <td> {{ r.id }}</td>
+                <td> {{ r.date | date("m/d/Y")}}</td>
+                <td> {{ r.isApproved ? "approved" : "not approved"}}</td>
+                <td> <a href="{{ path('reservation_detail', {'id': r.id}) }}">show</a></td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    </div>
+
+
+{% endblock %}
+
+
+{% block javascripts %}
+    <script src="{{ asset('ajax.js') }}"></script>
+
+    <script>
+        $(document).ready( function() {
+
+            $('#loading-image').bind('ajaxStart', function(){
+                $(this).show();
+            }).bind('ajaxStop', function(){
+                $(this).hide();
+            });
+
+            var path = '{{ path("api_reserver", {'id': hotel.id }) }}';
+            $(document).on("click", "#reserver", function(e) {
+                e.preventDefault();
+                console.log($(this).val());
+
+                reserver(path , $("#paxList").val() , $("#dateRes").val() )
+            });
+        });
+    </script>
+
+
+
+{% endblock %}

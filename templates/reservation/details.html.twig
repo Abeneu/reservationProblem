@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ReservationController!{% endblock %}
+
+{% block body %}
+
+    <table>
+        <thead>
+        <tr>
+            <th>Reservation Detail</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for r in reservations %}
+            <tr>
+                <td>chambre  {{ r.numChambre }} : {{ r.gp}} </td>
+            </tr>
+        {% endfor %}
+
+
+
+
+
+        </tbody>
+    </table>
+
+{% endblock %}
+

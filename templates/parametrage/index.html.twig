@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Parametrage{% endblock %}
+
+{% block body %}
+
+<div>
+    <h1>Hotel : {{ hotel.name }}</h1>
+    <div>
+        <label for="paxRoom">Pax Number per room </label>
+        <input id="paxRoom" type="number" placeholder="" value="{{ hotel.paxPerChambre }}"/>
+        <input id="change" type="button" value="change"/> <div id="tableId"></div>
+
+    </div>
+
+    <h4>Liste de Tranches d'age</h4>
+    <table>
+        <thead>
+        <tr>
+            <th> N° </th>
+            <th>label</th>
+            <th>min</th>
+            <th>max</th>
+            <th>Cannot Be Alone</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for ageRange in hotel.ageRanges %}
+        <tr>
+            <td>{{ ageRange.id }}</td>
+            <td>{{ ageRange.label }}</td>
+            <td>{{ ageRange.min }}</td>
+            <td>{{ ageRange.max }}</td>
+            <td>{{ ageRange.IsNotLonely }}</td>
+            <td><a href="{{ path("parametrage_deleteRange", {'id': ageRange.id }) }}">delete</a></td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td><input id="label" type="text" placeholder="Label ..."/></td>
+            <td><input id="min" type="number" placeholder="min"/></td>
+            <td><input id="max" type="number" placeholder="max"/></td>
+            <td><input id="cannotBeAlone" type="checkbox" /></td>
+            <td><button id="add">Add</button></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('ajax.js') }}"></script>
+
+    <script>
+        $(document).ready( function() {
+
+            $('#loading-image').bind('ajaxStart', function(){
+                $(this).show();
+            }).bind('ajaxStop', function(){
+                $(this).hide();
+            });
+
+            var path = '{{ path("api_changeParameter", {'id': hotel.id }) }}';
+            $(document).on("click", "#change", function(e) {
+                e.preventDefault();
+                console.log($(this).val());
+
+                updateNumberPerRoom(path , $("#paxRoom").val()  );
+            });
+
+
+            var pathAddRange = '{{ path("api_addRange", {'id': hotel.id }) }}';
+            $(document).on("click", "#add", function(e) {
+                e.preventDefault();
+                console.log($(this).val());
+
+                addAgeRange(pathAddRange , $("#label").val() ,$("#min").val()   ,$("#max").val() , $("#cannotBeAlone").val()  );
+            });
+        });
+    </script>
+
+
+
+{% endblock %}
